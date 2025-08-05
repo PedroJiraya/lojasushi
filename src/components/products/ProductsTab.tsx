@@ -1,20 +1,60 @@
-"use client";
-
+import { getAllProducts } from "@/services/product";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { Product } from "@/types/Product";
+import { Empty } from "./empty";
+import { ProductItem } from "./item";
+type Tab = {
+	title: string;
+	value: string;
+	products: Product[];
+};
+export const ProductsTab = async () => {
+	const products = await getAllProducts();
 
-export const ProductsTab = () => {
-  return (
-    <Tabs defaultValue="tab1">
-      <TabsList className="flex w-full">
-        <TabsTrigger className="flex-1" value="tab1">
-          Tab1
-        </TabsTrigger>
-        <TabsTrigger className="flex-1" value="tab2">
-          Tab2
-        </TabsTrigger>
-      </TabsList>
-      <TabsContent value="tab1"> consteudo da tab1</TabsContent>
-      <TabsContent value="tab2"> consteudo da tab2</TabsContent>
-    </Tabs>
-  );
+	const tabs: Tab[] = [
+		{
+			title: "Sushi",
+			value: "sushi",
+			products: products.filter((item) => item.category === "sushi"),
+		},
+		{
+			title: "Temaki",
+			value: "temaki",
+			products: products.filter((item) => item.category === "temaki"),
+		},
+		{
+			title: "Combinados",
+			value: "pack",
+			products: products.filter((item) => item.category === "pack"),
+		},
+		{
+			title: "Bebidas",
+			value: "beverage",
+			products: products.filter((item) => item.category === "beverage"),
+		},
+	];
+
+	return (
+		<Tabs defaultValue="sushi">
+			<TabsList className="flex w-full">
+				{tabs.map((item) => (
+					<TabsTrigger key={item.value} value={item.value} className="flex-1">
+						{item.title}
+					</TabsTrigger>
+				))}
+			</TabsList>
+			{tabs.map((item, index) => (
+				<TabsContent key={index} value={item.value} className="mt-6">
+					{item.products.length > 0 && (
+						<div className="grid gap-5 grid-cols-2 sm:grid-cols-3 md:grid-cols-4">
+							{item.products.map((product) => (
+								<ProductItem key={product.id} item={product} />
+							))}
+						</div>
+					)}
+					{item.products.length === 0 && <Empty />}
+				</TabsContent>
+			))}
+		</Tabs>
+	);
 };
