@@ -11,6 +11,7 @@ type Props = {
 
 export const ProductItem = ({ item }: Props) => {
   const { upSetCartItem } = useCartStore((state) => state);
+  const { cart } = useCartStore((state) => state);
 
   const handdleAddButton = () => {
     upSetCartItem(item, 1);
@@ -18,7 +19,7 @@ export const ProductItem = ({ item }: Props) => {
       description: item.name,
       action: {
         label: "Fechar",
-        onClick: () => console.log("Fechar"),
+        onClick: () => console.log("fechar"),
       },
     });
   };

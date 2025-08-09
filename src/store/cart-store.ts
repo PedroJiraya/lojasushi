@@ -17,7 +17,7 @@ const initialState: States = {
 export const useCartStore = create<States & Actions>()(set =>({
     ...initialState,
     upSetCartItem:(product, quantity) => set(state => {
-        let newCart = state.cart;
+        let newCart = [...state.cart]
 
 
         let productIndex = newCart.findIndex(item => item.product.id === product.id)
@@ -30,7 +30,7 @@ export const useCartStore = create<States & Actions>()(set =>({
         newCart[productIndex].quantity += quantity
 
         if( newCart[productIndex].quantity <= 0){
-            newCart.filter(item => item.product.id !==  product.id)
+            newCart = newCart.filter(item => item.product.id !== product.id)
         }
 
         return {...state, cart: newCart}
